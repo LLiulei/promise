@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>promise 加载图片</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style lang="">
+        img {
+            width: 300px;
+            height: 300px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        let arr = [
+            "./image/img1.jpg",
+            "./image/img2.jpg",
+            "./image/img3.jpg",
+            "./image/img4.jpg",
+            "./image/img5.jpg",
+            "./image/img6.jpg",
+        ];
+        function Loading(url) {
+            return new Promise((resolve, reject) => {
+                let Img = new Image();
+                Img.src = url;
+                Img.onload = () => {
+                    resolve(Img);
+                }
+                Img.onerror = () => {
+                    reject("没有此路径");
+                }
+                console.log( Img.src)
+            })
+        }
+
+        //依次加载 一个一个加载图片
+        async function Load() {
+            let img = "";
+            try {
+                //for 循环同步循环机制
+                for (var i = 0; i < arr.length; i++) { //同步
+                    img = await loadImg(arr[i]);
+                    document.body.appendChild(img);
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        };
+        Load();
+        
+        //并行加载 
+        // function load(v){
+        //     let img='';
+        //     //forEach的异步循环机制
+        //     arr.forEach(async item=>{
+        //         try{
+        //         img=await loadImg(item);
+        //         document.body.appendChild(img)
+        //         }catch(err){
+
+        //         }
+        //     })  
+        // }
+        // load()
+
+        //一起加载 轮训原理 所有图片加载完在一起出来
+        // var arr1=[];//创建一个新数组
+        // let box=document.getElementById("box");//获取box标签
+        // for(var i=0;i<arr.length;i++){  //同步
+        //     let img = new Image();//创建image
+        //     img.src=arr[i];//img的src
+        //     img.onload=()=>{//img等待加载
+        //         arr1.push(img);//往新数组pushimg
+        //         if(arr.length===arr1.length){//判断新数组和旧数组的长度
+        //             arr1.forEach(v=>{//循环新数组
+        //                 box.appendChild(v)//把新数组的图片添加box中
+        //             })   
+        //         } 
+        //     }
+        // }
+    </script>
+</body>
+</html>
